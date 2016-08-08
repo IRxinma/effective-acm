@@ -1,0 +1,46 @@
+#include<iostream>
+#include<cstdio>
+#include<algorithm>
+#include<cmath>
+#include<cstring>
+#include<queue>
+#include<cstdlib>
+#include<stack>
+#include<climits>
+#include<vector>
+#include<string>
+#include<map>
+using namespace std;
+int p[25][25], vis[25], ans[25], m, cases;
+
+void dfs(int x, int dep){
+    if(dep == 19 && p[x][m]){
+        printf("%d:  %d ", ++cases, m);
+        for(int i = 0; i < 19; i++) printf("%d ", ans[i]);
+        printf("%d\n", m);
+        return ;
+    }
+    for(int i = 1; i <= 20; i ++){
+        if(!vis[i] && p[x][i]){
+            vis[i] = 1; ans[dep] = i;
+            dfs(i, dep+1);
+            vis[i] = 0;
+        }
+    }
+}
+
+int main(){
+    int x, y, z;
+    memset(p, 0, sizeof(p));
+    for(int i = 1; i <= 20; i ++){
+        scanf("%d%d%d", &x, &y, &z);
+        p[i][x] = p[i][y] = p[i][z] = 1;
+        p[x][i] = p[y][i] = p[z][i] = 1;
+    }
+    while(~scanf("%d", &m) && m){
+        memset(vis, 0, sizeof(vis));
+        cases = 0; vis[m] = 1;
+        dfs(m, 0);
+    }
+    return 0;
+}
