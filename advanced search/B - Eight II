@@ -1,0 +1,147 @@
+#include<iostream>
+#include<cstdio>
+#include<algorithm>
+#include<cmath>
+#include<cstring>
+#include<queue>
+#include<cstdlib>
+#include<stack>
+#include<climits>
+#include<vector>
+#include<string>
+#include<map>
+using namespace std;
+/*
+~~~~~~~we can put the specific number into the position.~~~~~~~~~
+so we can solve the pretreatment about each relationship between 'x' and number . it means the fartest route. at the same time we 
+use "ACGT" instructions its own is minimum dictionary order.
+so O(1). 
+*/
+//const int maxn = 5e5;
+char str[20];
+int num[20], has[10];
+bool vis[500000];
+int pre[10][500000], ans[10][500000];
+//int dir[4][2] = {1,0,0,1,-1,0,0,-1};
+//char way[10] = "drul";
+int dir[4][2] = {1,0,0,-1,0,1,-1,0};
+char way[10]="dlru";
+
+struct node{
+    int x, y;
+    char p[5][5];
+    node(){}
+    node(char *s){
+        int xx = 0, yy = 0;
+        for(int i = 0; i < strlen(s); i ++){
+            p[xx][yy] = s[i];
+            if(s[i] == 'X'){x = xx; y = yy;}
+            yy ++;
+            if(yy == 3){xx ++; yy = 0;}
+        }
+    }
+};
+node s;
+
+int canto(node s){
+    int ans = 0, num[20];
+    for(int i = 0; i < 3; i ++){
+        for(int j = 0; j < 3; j ++){
+            num[3*i+j] = s.p[i][j];
+            int cnt = 0;
+            for(int k = 3*i+j-1; k >= 0; k --){
+                if(num[k] > num[3*i+j]) cnt ++;
+            }
+            ans += cnt * has[3*i+j];
+        }
+    }
+    return ans;
+}
+
+void bfs(int p){
+    memset(pre[p], -1, sizeof(pre[p]));
+    memset(vis, 0, sizeof(vis));
+    queue<node> q;
+    node t, nxt;
+    vis[canto(s)] = 1;
+    q.push(s);
+    while(!q.empty()){
+        t = q.front(); q.pop();
+        int ct = canto(t);
+        for(int i = 0; i < 4; i ++){
+            nxt = t;
+            nxt.x += dir[i][0];
+            nxt.y += dir[i][1];
+            if(nxt.x < 0 || nxt.x > 2 || nxt.y < 0 || nxt.y > 2) continue;
+            nxt.p[t.x][t.y] = nxt.p[nxt.x][nxt.y];
+            nxt.p[nxt.x][nxt.y] = 'X';
+            int cb = canto(nxt);
+            if(vis[cb]) continue;
+            vis[cb] = 1;
+            pre[p][cb] = ct;
+            ans[p][cb] = way[i];
+            q.push(nxt);
+        }
+    }
+}
+
+int main(){
+    int cases = 0, t;
+    has[0] = 1;
+    for(int i = 1; i < 10; i ++) has[i] = has[i-1] * i;
+    s = node("X12345678");
+    bfs(0);
+    s = node("1X2345678");
+    bfs(1);
+    s = node("12X345678");
+    bfs(2);
+    s = node("123X45678");
+    bfs(3);
+    s = node("1234X5678");
+    bfs(4);
+    s = node("12345X678");
+    bfs(5);
+    s = node("123456X78");
+    bfs(6);
+    s = node("1234567X8");
+    bfs(7);
+    s = node("12345678X");
+    bfs(8);
+
+    scanf("%d", &t);
+    while(t --){
+        scanf("%s", str);
+        int j, p;
+        for(int i = 0, j = 0; i < 9; i ++){
+            if(str[i] == 'X') p = i;
+            else num[str[i] - '0'] = j++;
+        }
+        //for(int i = 0; i < 9; i ++) cout << num[str[i] - '0']; cout << endl;
+
+        scanf("%s", str);
+        for(int i = 0; i < 9; i ++){
+            if(str[i] == 'X') continue;
+            str[i] = num[str[i] - '0'] + '1';
+        }
+        //for(int i = 0; i < 9; i ++) cout << str[i]; cout << endl;
+
+        s = node(str);
+
+        /*for(int i = 0; i < 3; i ++){
+            for(int j = 0; j < 3; j ++)
+                printf("%c ", s.p[i][j]);
+            printf("\n");
+        }*/
+
+        int cs = canto(s); //cout << ca << endl;
+        string ss = "";
+        while(cs != -1){
+            ss += ans[p][cs];
+            cs = pre[p][cs];
+        }
+        printf("Case %d: %d\n", ++ cases, ss.size() - 1);
+        for(int i = ss.size() - 2; i >= 0; i --) printf("%c", ss[i]);
+        printf("\n");
+    }
+    return 0;
+}
