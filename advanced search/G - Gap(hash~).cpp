@@ -12,6 +12,10 @@
 #include<map>
 using namespace std;
 typedef long long ll;
+/*
+the key is how to search. space should be to gradually shift back.
+deduplication commonly used hash.~
+*/
 const int mod = 1e6+7;
 struct node{
     int step;

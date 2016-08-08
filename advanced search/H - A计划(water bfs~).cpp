@@ -11,6 +11,9 @@
 #include<string>
 #include<map>
 using namespace std;
+/*
+only need to pay attention to '#'.What it means that when we are here, we must not only through the layer but also no time
+consumption*/
 char p[2][11][11];
 struct node{
     int x, y, h, step;

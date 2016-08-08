@@ -12,6 +12,10 @@
 #include<map>
 using namespace std;
 //const int maxn = 101;
+/*
+pretertation is the most important. then the question is a simple dfs.
+pay attention to there are five slection about direction.
+*/
 struct castle{
     int x, y, period, v, dir;
 };
