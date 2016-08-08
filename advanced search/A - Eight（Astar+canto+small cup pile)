@@ -1,0 +1,143 @@
+#include<iostream>
+#include<cstdio>
+#include<algorithm>
+#include<cmath>
+#include<cstring>
+#include<queue>
+#include<cstdlib>
+#include<stack>
+#include<climits>
+#include<vector>
+#include<string>
+#include<map>
+using namespace std;
+/*
+very classic.
+first, to judge whether it has several solutions , i need to use reverse order number! it't important. because the nature of its
+own. when 'x' is in the process of moving, parity of this sequence shoule not change about reverse order number.
+second,bfs need to determine whether to repeat, so i use hash and reverse order number(canto).
+third,i use priority_queue. once pushing in the queue is smallest value what i estimated.
+*/
+const int maxn = 5e5;
+struct node{
+    int x, y;
+    int g, h, f;
+    char p[5][5];
+    friend bool operator<(const node &a, const node &b){
+        if(a.f == b.f) return a.g < b.g;
+        return a.f > b.f;
+    }
+};
+node st, nxt;
+int pos[][2]={{0,0},{0,1},{0,2},{1,0},{1,1},{1,2},{2,0},{2,1},{2,2}};
+int dir[4][2]={1,0,0,1,-1,0,0,-1};
+char to_c[10]="drul";
+char str[100], ans[maxn];
+int pre[maxn], vis[maxn], has[15];
+
+bool check(){
+    int ss[20], ans = 0;
+    for(int i = 0; i < 3; i ++){
+        for(int j = 0; j < 3; j ++){
+            ss[3*i+j] = st.p[i][j];
+            if(st.p[i][j] == 'x') continue;
+            for(int k = 3*i+j-1; k >= 0; k--){
+                if(ss[k] == 'x') continue;
+                if(ss[k] > st.p[i][j]) ans ++;  //s[3*i+j]
+            }
+        }
+    }//cout << ans << endl;
+    if(ans % 2) return false;
+    return true;
+}
+
+int canto(node s){
+    int ss[20], ans = 0, cnt;
+    for(int i = 0; i < 3; i ++){
+        for(int j = 0; j < 3; j ++){
+            ss[3*i+j] = s.p[i][j];
+            cnt = 0;
+            for(int k = 3*i+j-1; k >= 0; k--){
+                if(ss[k] > s.p[i][j]) cnt ++;
+            }
+            ans += cnt * has[3*i+j];
+        }
+    }
+    //cout << ans << endl;
+    return ans;
+}
+
+int get_h(node s){
+    int ans = 0;
+    for(int i = 0; i < 3; i ++){
+        for(int j = 0; j < 3; j ++){
+            if(s.p[i][j] == 'x') continue;
+            int k = s.p[i][j] - '1';
+            ans += abs(pos[k][0]-i) + abs(pos[k][1]-j);
+        }
+    }
+    return ans;
+}
+
+void bfs(){
+    memset(vis, 0, sizeof(vis));
+    priority_queue<node> q;
+    st.g = 0; st.h = get_h(st); st.f = st.g + st.h;
+    q.push(st);
+    while(!q.empty()){
+        node t = q.top(); q.pop(); //cout << t.x << "..." << t.y << endl;
+        int k_s = canto(t); //cout << k_s << endl;
+        for(int i = 0; i < 4; i ++){
+            nxt = t;
+            nxt.x += dir[i][0]; //cout << nxt.x << endl;
+            nxt.y += dir[i][1]; //cout << nxt.y << endl;
+            if(nxt.x < 0 || nxt.x >= 3 || nxt.y < 0 || nxt.y>=3) continue;
+            nxt.p[t.x][t.y] = t.p[nxt.x][nxt.y];
+            nxt.p[nxt.x][nxt.y] = 'x';
+            nxt.g += 1;
+            nxt.h = get_h(nxt);
+            nxt.f = nxt.g + nxt.h;
+            int k_n = canto(nxt); //cout << k_n << endl;
+            if(vis[k_n]) continue;
+            vis[k_n] = 1;
+            q.push(nxt);
+            pre[k_n] = k_s;
+            ans[k_n] = to_c[i];
+            if(k_n == 0) return ;
+        }
+    }
+}
+
+int main(){
+    has[0] = 1;
+    for(int i = 1; i <= 9; i ++) has[i] = has[i-1]*i;
+    while(gets(str)){
+        int len = strlen(str);
+        int x = 0, y = 0;
+        for(int i = 0; i < len; i ++){
+            if(str[i] >= '1' && str[i] <= '9' || str[i] == 'x'){
+                st.p[x][y] = str[i];
+                if(str[i] == 'x'){
+                    st.x = x; st.y = y; //cout << x << "|||" <<y << endl;
+                }
+                y ++;
+                if(y == 3){ x ++; y = 0;}
+            }
+        }
+        if(!check()){printf("unsolvable\n"); continue;}
+        int sa = canto(st); //cout << sa << endl;
+        bfs();
+        int now = 0;
+        stack<int> s;
+        while(sa != now){
+            s.push(ans[now]);
+            now = pre[now];
+        }
+        while(!s.empty()){
+            putchar(s.top());
+            s.pop();
+        }
+        printf("\n");
+    }
+    return 0;
+}
