@@ -1,0 +1,74 @@
+#include<iostream>
+#include<cstdio>
+#include<algorithm>
+#include<cmath>
+#include<cstring>
+#include<queue>
+#include<cstdlib>
+#include<stack>
+#include<climits>
+#include<vector>
+#include<string>
+#include<map>
+using namespace std;
+struct node{
+    char dna[5];
+    int len;
+};
+node s[10];
+int pos[10],pos_t[10];
+char dir[] = {"ACGT"};
+int n, deep;
+
+int get_h(){
+    int maxs = 0;
+    for(int i = 1; i <= n; i ++){
+        maxs = max(maxs, s[i].len - pos[i]);
+    }
+    return maxs;
+}
+
+bool IDAstar(int k){
+    if(k + get_h() > deep) return false;
+    if(get_h() == 0) return true;
+    for(int i = 0; i < 4; i ++){
+        //memcpy(pos_t, pos, sizeof(pos));
+        int t[10];
+        for(int j = 1; j <= n; j ++) t[j] = pos[j];
+        bool flag = 0;
+        for(int j = 1; j <= n; j ++){
+            if(s[j].dna[pos[j]] == dir[i]){
+                flag = 1;
+                pos[j] ++;
+            }
+        }
+        if(flag){
+            if(IDAstar(k+1)) return true;
+            else //memcpy(pos, pos_t, sizeof(pos_t));
+                for(int j = 1; j <= n; j ++) pos[j] = t[j];
+        }
+    }
+    return false;
+}
+
+int main(){
+    int t;
+    scanf("%d", &t);
+    while(t --){
+        int maxs = -1;
+        scanf("%d", &n);
+        for(int i = 1; i <= n; i++){
+            scanf("%s", s[i].dna);
+            s[i].len = strlen(s[i].dna);
+            pos[i] = 0;
+            maxs = max(maxs, s[i].len);
+        }
+        deep = maxs;
+        while(1){
+            if(IDAstar(0)) break;
+            deep ++;
+        }
+        printf("%d\n", deep);
+    }
+    return 0;
+}
