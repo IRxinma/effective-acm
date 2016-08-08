@@ -1,0 +1,77 @@
+#include<iostream>
+#include<cstdio>
+#include<algorithm>
+#include<cmath>
+#include<cstring>
+#include<queue>
+#include<cstdlib>
+#include<stack>
+#include<climits>
+#include<vector>
+#include<string>
+#include<map>
+using namespace std;
+/*
+the question request that every point go up to two times.so compression of binary can't be directly calculated results.
+because binary only represents whether the point through the state,specific through several times it didn't record.however
+the topic request to go twice more.
+so i have ternary!!!
+then dp part is a rountine method for state of compression.
+*/
+typedef long long ll;
+const int maxn = 60000;
+const int inf = 0x3f3f3f3f;
+int dp[maxn][11];
+int num[maxn][11];
+int load[12][12];
+int three[11];
+int n, m;
+void init(){
+    three[0] = 1;
+    for(int i = 1; i < 11; i ++) three[i] = three[i-1]*3;
+    for(int i = 0; i < three[10]; i ++){
+        int tmp = i;
+        for(int j = 0; j < 10; j++){
+            num[i][j] = tmp%3;
+            tmp /= 3;
+        }
+    }
+}
+
+int main(){
+    init();
+    while(~scanf("%d%d", &n, &m)){
+        memset(load, -1, sizeof(load));
+        for(int i = 0; i < m; i ++){
+            int a, b, c;
+            scanf("%d%d%d", &a, &b, &c);
+            if(load[a-1][b-1] == -1)
+                load[a-1][b-1] = load[b-1][a-1] = c;
+            else
+                load[a-1][b-1] = load[b-1][a-1] = min(load[a-1][b-1], c);
+        }
+        memset(dp, 0x3f3f3f3f, sizeof(dp));
+        for(int i = 0; i < n; i ++) dp[three[i]][i] = 0;
+        int flag, next;
+        int ans = inf;
+        for(int i = 0; i < three[n]; i ++){
+            flag = 1;
+            for(int j = 0; j < n; j ++){
+                if(num[i][j] == 0) flag = 0;
+                if(dp[i][j] == inf) continue;
+                for(int l = 0; l < n; l ++){
+                    if(j==l || num[i][l]>=2 || load[l][j]==-1) continue;
+                    next = i+three[l];
+                    dp[next][l] = min(dp[next][l], dp[i][j]+load[j][l]);
+                }
+            }
+            if(flag == 1){
+                for(int j = 0; j < n; j ++)
+                    ans = min(ans, dp[i][j]);
+            }
+        }
+        if(ans == inf) ans = -1;
+            printf("%d\n", ans);
+    }
+    return 0;
+}
