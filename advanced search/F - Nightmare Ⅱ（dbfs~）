@@ -1,0 +1,93 @@
+#include<iostream>
+#include<cstdio>
+#include<algorithm>
+#include<cmath>
+#include<cstring>
+#include<queue>
+#include<cstdlib>
+#include<stack>
+#include<climits>
+#include<vector>
+#include<string>
+#include<map>
+using namespace std;
+/*
+the question:'M' three steps every time; 'G' one step at a time; 'Z' two steps onec. if two people can meet, please give at least time.
+dbfs! -->respectively from the initial node ans the target node as two bfs.each time you slect the queue node less extenssions, and testing on both
+sides if the states are coincidence.
+*/
+const int maxn = 1001;
+struct node{
+    int x, y;
+    node(){}
+    node(int _x, int _y):x(_x),y(_y){}
+};
+node M, G, Z[2];
+char p[maxn][maxn];
+bool vis[2][maxn][maxn];
+int k, n, m, step;
+queue<node> q[2];
+int dir[4][2] = {1,0,0,1,-1,0,0,-1};
+
+bool judge(node t){
+    for(int i = 0; i <= 1; i ++)
+    if(abs(t.x-Z[i].x)+abs(t.y-Z[i].y) <= 2*step) return false;
+    return true;
+}
+
+bool bfs(int num){
+    int siz = q[num].size();
+    while(siz --){
+        node t = q[num].front(); q[num].pop();
+        if(!judge(t)) continue;
+        for(int i = 0; i < 4; i ++){
+            node cur = t;
+            cur.x += dir[i][0];
+            cur.y += dir[i][1];
+            if(cur.x<0 || cur.x>=n || cur.y<0 || cur.y>=m || p[cur.x][cur.y]=='X') continue;
+            if(!judge(cur)) continue;
+            if(vis[num][cur.x][cur.y]) continue;
+            if(vis[!num][cur.x][cur.y]) return true;
+            vis[num][cur.x][cur.y] = true;
+            q[num].push(cur);
+        }
+    }
+    return false;
+}
+
+int dbfs(){
+    memset(vis, false, sizeof(vis));
+    while(!q[0].empty()) q[0].pop();
+    while(!q[1].empty()) q[1].pop();
+    q[0].push(M);
+    q[1].push(G);
+    vis[0][M.x][M.y] = true;
+    vis[1][G.x][G.y] = true;
+    step = 0;
+    while(!q[0].empty() && !q[1].empty()){
+        step ++;
+        if(bfs(0)) return step;
+        if(bfs(0)) return step;
+        if(bfs(0)) return step;
+        if(bfs(1)) return step;
+    }
+    return -1;
+}
+
+int main(){
+    scanf("%d", &k);
+    while(k --){
+        scanf("%d%d", &n, &m);
+        int cnt = 0;
+        for(int i = 0; i < n; i ++){
+            scanf("%s", p[i]);
+            for(int j = 0; j < m; j ++){
+                if(p[i][j] == 'M') M=node(i,j);
+                else if(p[i][j] == 'G') G=node(i,j);
+                else if(p[i][j] == 'Z') Z[cnt++]=node(i,j);
+            }
+        }
+        printf("%d\n", dbfs());
+    }
+    return 0;
+}
