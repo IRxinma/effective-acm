@@ -8,7 +8,7 @@ the whole process:
 called special path from the source to U. and recorded the shortest special path length corresponding to each vertax with the array
 dist, and put u into S. once S contians all the vertices in V,dist is recorded from the source to the length of shortest path between
 all the other vertices.
-O(N^2)
+O(N^2) but it can't handle negative right loop.
 */
 const int maxn = 1010;
 const int inf = 0x3f3f3f3f;
