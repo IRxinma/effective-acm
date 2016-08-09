@@ -1,0 +1,65 @@
+#include<iostream>
+#include<cstdio>
+#include<algorithm>
+#include<cmath>
+#include<cstring>
+#include<queue>
+#include<cstdlib>
+#include<stack>
+#include<climits>
+#include<vector>
+#include<string>
+#include<map>
+using namespace std;
+const int maxn = 2010;
+const int inf = 0x3f3f3f3f;
+struct Edge{
+    int u, v, w, next;
+    Edge(int _u=0,int _v=0,int _w=0):u(_u),v(_v),w(_w){}
+};
+Edge edge[2*maxn];
+int n, m, headlist[maxn];
+int dist[maxn];
+bool vis[maxn];
+void spfa(){
+    for(int i=2; i<=n; i++){dist[i]=inf; vis[i]=0;}
+    dist[1]=0; vis[1]=1;
+    queue<int> q;
+    q.push(1);
+    while(!q.empty()){
+        int t=q.front(); q.pop();
+        vis[t]=0;
+        for(int i=headlist[t]; i!=-1; i=edge[i].next){
+            if(dist[t]+edge[i].w<dist[edge[i].v]){
+                dist[edge[i].v]=dist[t]+edge[i].w;
+            if(!vis[edge[i].v]){
+                vis[edge[i].v]=true;
+                q.push(edge[i].v);
+                }
+            }
+        }
+    }
+    printf("%d\n", dist[n]);
+}
+
+int main(){
+    int a, b, c;
+    while(~scanf("%d%d", &m, &n)){
+        for(int i=1; i<=n; i++) headlist[i]=-1;
+        for(int i=1; i<=2*m; i+=2){
+            scanf("%d%d%d", &a, &b, &c);
+            edge[i].u=a;
+            edge[i].v=b;
+            edge[i].w=c;
+            edge[i].next=headlist[a];
+            headlist[a]=i;
+            edge[i+1].u=b;
+            edge[i+1].v=a;
+            edge[i+1].w=c;
+            edge[i+1].next=headlist[b];
+            headlist[b]=i+1;
+        }
+        spfa();
+    }
+    return 0;
+}
