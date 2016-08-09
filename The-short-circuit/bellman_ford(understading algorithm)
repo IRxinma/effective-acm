@@ -14,7 +14,8 @@ struct Edge{
     int cost;
     Edge(int _u=0,int _v=0,int _cost=0):u(_u),v(_v),cost(_cost){}
 };
-vector<Edge> E; // add edge
+vector<Edge> E; // add edge   
+Edge edge[maxn];
 bool bellman_ford(int start,int n){
     for(int i=1;i<=n;i++) dist[i]=inf;
     dist[start]=0;
