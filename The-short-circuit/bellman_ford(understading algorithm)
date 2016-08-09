@@ -1,0 +1,38 @@
+/*
+it's my understanding:
+how to solve negative right loop?
+if there are n points, the most we deal with n-1 times.
+traversing all the way to the edge(edge(u,v)), determines whether there is a such situation:
+  dist（v） > dist (u) + cost(u,v) its means there is negative right loop,otherwise no.
+*/
+const int maxn = 550;
+const int inf = 0x3f3f3f3f;
+int dist[maxn];
+struct Edge{
+    int u,v;
+    int cost;
+    Edge(int _u=0,int _v=0,int _cost=0):u(_u),v(_v),cost(_cost){}
+};
+vector<Edge> E; // add edge
+bool bellman_ford(int start,int n){
+    for(int i=1;i<=n;i++) dist[i]=inf;
+    dist[start]=0;
+    //n-1 times
+    for(int i=1; i<n; i++){
+        bool flag=false;
+        for(int j=0; j<E.size(); j++){
+            int u=E[j].u;
+            int v=E[j].v;
+            int cost=E[j].cost;
+            if(dist[v]>dist[u]+cost){
+                dist[v]=dist[u]+cost;
+                flag=true;
+            }
+        }
+        if(!flag) return true;
+    }
+    for(int j=0; j<E.size(); j++)
+        if(dist[E[j].v]>dist[E[j].u]+E[j].cost)
+            return false;
+    return true;
+}
