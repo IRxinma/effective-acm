@@ -81,3 +81,6 @@ void Dijkstra(int n, int start){
         }
     }
 }
+void addedge(int u, int v, int w){
+    E[u].push_back(Edge(v, w));
+}
