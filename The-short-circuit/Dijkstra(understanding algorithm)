@@ -10,33 +10,37 @@ dist, and put u into S. once S contians all the vertices in V,dist is recorded f
 all the other vertices.
 O(N^2) but it can't handle negative right loop.
 */
-const int maxn = 1010;
+const int maxn = 2010;
 const int inf = 0x3f3f3f3f;
 bool vis[maxn];
-int pre[maxn];
-void Dijkstra(int cost[][maxn], int lowcost[], int n, int beg){
+int pre[maxn], cost[maxn][maxn];
+int t, n;
+void Dijkstra(){
+    int dist[maxn];
     for(int i=0; i<n; i++){
-        lowcost[i]=inf; vis[i]=false; pre[i]=-1;
+        dist[i]=inf; vis[i]=false; pre[i]=-1;
     }
-    lowcost[beg]=0;
+    dist[0]=0;                 //selection
     for(int j=0; j<n; j++){
         int k=-1;
         int Min=inf;
         for(int i=0; i<n; i++){
-            if(!vis[i] && lowcost[i]<Min){
-                Min=lowcost[i];
+            if(!vis[i] && dist[i]<Min){
+                Min=dist[i];
                 k=i;
             }
         }
         if(k==-1) break;
         vis[k]=true;
         for(int i=0; i<n; i++){
-            if(!vis[i] && lowcost[k]+cost[k][i]<lowcost[i]){
-                lowcost[i]=lowcost[k]+cost[k][i];
+            if(!vis[i] && dist[k]+cost[k][i]<dist[i]){
+                dist[i]=dist[k]+cost[k][i];
                 pre[i]=k;
             }
         }
     }
+    printf("%d\n", dist[n-1]);        //selection
+    return ;
 }
 
 //use priority_queue O(ElogE)
