@@ -1,0 +1,40 @@
+/*
+it's my understanding.
+Dijkstra algorithm is a typical shortest path routing algorithm, it used to calculated a node to all other nodes of the shortest 
+path. the main characteristics is the starting point as the center to the outer layers of extension, until it is entendend to the end.
+but a lot of computing nodes to traverse it, so inefficient.
+the whole process:
+  initially, S contians only source. U is a vertex of G. from the source to the U and only through S intermediate vertex road was 
+called special path from the source to U. and recorded the shortest special path length corresponding to each vertax with the array
+dist, and put u into S. once S contians all the vertices in V,dist is recorded from the source to the length of shortest path between
+all the other vertices.
+O(N^2)
+*/
+const int maxn = 1010;
+const int inf = 0x3f3f3f3f;
+bool vis[maxn];
+int pre[maxn];
+void Dijkstra(int cost[][maxn], int lowcost[], int n, int beg){
+    for(int i=0; i<n; i++){
+        lowcost[i]=inf; vis[i]=false; pre[i]=-1;
+    }
+    lowcost[beg]=0;
+    for(int j=0; j<n; j++){
+        int k=-1;
+        int Min=inf;
+        for(int i=0; i<n; i++){
+            if(!vis[i] && lowcost[i]<Min){
+                Min=lowcost[i];
+                k=i;
+            }
+        }
+        if(k==-1) break;
+        vis[k]=true;
+        for(int i=0; i<n; i++){
+            if(!vis[i] && lowcost[k]+cost[k][i]<lowcost[i]){
+                lowcost[i]=lowcost[k]+cost[k][i];
+                pre[i]=k;
+            }
+        }
+    }
+}
