@@ -4,6 +4,7 @@ how to solve negative right loop?
 if there are n points, the most we deal with n-1 times.
 traversing all the way to the edge(edge(u,v)), determines whether there is a such situation:
   dist（v） > dist (u) + cost(u,v) its means there is negative right loop,otherwise no.
+  O(VE)
 */
 const int maxn = 550;
 const int inf = 0x3f3f3f3f;
