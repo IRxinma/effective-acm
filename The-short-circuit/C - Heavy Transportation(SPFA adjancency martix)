@@ -1,0 +1,61 @@
+#include<iostream>
+#include<cstdio>
+#include<algorithm>
+#include<cmath>
+#include<cstring>
+#include<queue>
+#include<cstdlib>
+#include<stack>
+#include<climits>
+#include<vector>
+#include<string>
+#include<map>
+using namespace std;
+const int maxn = 1010;
+int p[maxn][maxn], n, m;
+
+int spfa(){
+    int i,j,v;
+    queue<int> q;
+    bool vis[maxn];
+    int dist[maxn];
+    for(i=1; i<=n; i++){vis[i]=false; dist[i]=0;}
+    q.push(1); vis[1]=1;
+    while(!q.empty()){
+        v=q.front(); q.pop();
+        vis[v]=0;
+        for(int i=1; i<=n; i++){
+            if(v==1 && p[v][i]){
+                dist[i]=p[v][i];
+                q.push(i);
+                vis[i]=1;
+                continue;
+            }
+            if(dist[i]<min(dist[v], p[v][i])){
+                dist[i]=min(dist[v], p[v][i]);
+                if(vis[i]) continue;
+                vis[i]=1;
+                q.push(i);
+            }
+        }
+    }
+    return dist[n];
+}
+
+int main(){
+    int t, cases=0;
+    scanf("%d", &t);
+    while(t--){
+        scanf("%d%d", &n, &m);
+        for(int i=1; i<=n; i++)
+            for(int j=1; j<=n; j++)
+                p[i][j]=0;
+        for(int i=1; i<=m; i++){
+            int a, b, c;
+            scanf("%d%d%d", &a, &b, &c);
+            p[a][b]=p[b][a]=c;
+        }
+        printf("Scenario #%d:\n%d\n\n", ++cases, spfa());
+    }
+    return 0;
+}
