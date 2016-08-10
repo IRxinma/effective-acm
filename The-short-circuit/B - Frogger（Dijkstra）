@@ -13,8 +13,8 @@
 using namespace std;
 /*
 topic: there are two frogs and numberof stone.now we konw coordinates of these things.two frogs' coodinates
-are the first and second.now frog A wants to go to frog B using jumping. so the title asked a feasible path's
-maximum to minimum about 'edge'.
+are the first and second.now frog A wants to go to frog B using jumping. so the title asked to seek maximum s 
+to the minimum viable path of t. 
 */
 const int maxn = 201;
 const int inf = 0x3f3f3f3f;
