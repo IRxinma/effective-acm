@@ -1,0 +1,59 @@
+#include<iostream>
+#include<cstdio>
+#include<algorithm>
+#include<cmath>
+#include<cstring>
+#include<queue>
+#include<cstdlib>
+#include<stack>
+#include<climits>
+#include<vector>
+#include<string>
+#include<map>
+using namespace std;
+/*
+so the title asked a feasible path's minimum to maximum about 'edge'.
+*/
+const int maxn = 1010;
+int p[maxn][maxn], n, m;
+
+int Dijkstra(){
+    int dist[maxn];
+    bool vis[maxn];
+    for(int i=1; i<=n; i++){dist[i]=p[1][i];vis[i]=false;}
+    for(int i=1; i<n; i++){
+        int k=-1;
+        int Max=-1;
+        for(int j=1; j<=n; j++){
+            if(!vis[j] && dist[j]>Max){
+                Max=dist[j];
+                k=j;
+            }
+        }
+        vis[k]=true;
+        for(int j=1; j<=n; j++){
+            if(!vis[j] && dist[j]<min(dist[k],p[k][j])){
+                dist[j]=min(dist[k],p[k][j]);
+            }
+        }
+    }
+    return dist[n];
+}
+
+int main(){
+    int t, cases=0;
+    scanf("%d", &t);
+    while(t--){
+        scanf("%d%d", &n, &m);
+        for(int i=1; i<=n; i++)
+            for(int j=1; j<=n; j++)
+                p[i][j]=0;
+        for(int i=1; i<=m; i++){
+            int a, b, c;
+            scanf("%d%d%d", &a, &b, &c);
+            p[a][b]=p[b][a]=c;
+        }
+        printf("Scenario #%d:\n%d\n\n", ++cases, Dijkstra());
+    }
+    return 0;
+}
