@@ -1,0 +1,56 @@
+#include<iostream>
+#include<cstdio>
+#include<algorithm>
+#include<cmath>
+#include<cstring>
+#include<queue>
+#include<cstdlib>
+#include<stack>
+#include<climits>
+#include<vector>
+#include<string>
+#include<map>
+using namespace std;
+const int maxn = 1010;
+const int maxe = 1000010;
+const int inf = 0x3f3f3f3f;
+struct node{
+    int s, e, w;
+    node(int _s=0, int _e=0, int _w=0):s(_s),e(_e),w(_w){}
+};
+node edge[maxe];
+int n,m;
+
+int bellman_ford(){
+    int d[maxn];
+    bool vis[maxn];
+    for(int i=1; i<=n; i++) d[i]=0;
+
+    d[1]=inf;
+
+
+    for(int i=1; i<n; i++){
+        bool flag = false;
+        for(int j=1; j<=m; j++){
+            if(d[edge[j].e]<min(d[edge[j].s], edge[j].w))
+                d[edge[j].e]=min(d[edge[j].s], edge[j].w), flag=true;
+            if(d[edge[j].s]<min(d[edge[j].e], edge[j].w))
+                d[edge[j].s]=min(d[edge[j].e], edge[j].w), flag=true;
+        }
+        if(!flag) return d[n];
+    }
+    return d[n];
+}
+
+int main(){
+    int t, cases=0;
+    scanf("%d", &t);
+    while(t--){
+        scanf("%d%d", &n, &m);
+        for(int i=1; i<=m; i++){
+            scanf("%d%d%d", &edge[i].s, &edge[i].e, &edge[i].w);
+        }
+        printf("Scenario #%d:\n%d\n\n", ++cases, bellman_ford());
+    }
+    return 0;
+}
