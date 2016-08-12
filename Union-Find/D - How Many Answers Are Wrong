@@ -1,0 +1,51 @@
+#include<iostream>
+#include<cstdio>
+#include<algorithm>
+#include<cmath>
+#include<cstring>
+#include<queue>
+#include<cstdlib>
+#include<stack>
+#include<climits>
+#include<vector>
+#include<string>
+#include<map>
+using namespace std;
+const int maxn = 2e5 + 10;
+int pre[maxn], weight[maxn], n, m;
+void union_set(int x, int y, int fx, int fy, int w){
+    pre[fy]=fx;
+    weight[fy]=weight[x]+w-weight[y];
+}
+
+int find_set(int x){
+    if(x==pre[x]) return x;
+    int r=find_set(pre[x]);
+    weight[x]+=weight[pre[x]];
+    pre[x]=r;
+    return r;
+}
+
+int main(){
+    int a, b, c, fa, fb;
+    while(~scanf("%d%d", &n, &m)){
+        memset(weight, 0, sizeof(weight));
+        for(int i=0; i<=n; i++) pre[i]=i;
+        int ans=0;
+        for(int i=1; i<=m; i++){
+            scanf("%d%d%d", &a, &b, &c);
+            //fa=find_set(a-1);
+            a--;
+            fa=find_set(a);
+            fb=find_set(b);
+            if(fa==fb){
+                if(weight[b]-weight[a]!=c)
+                    ans ++;
+            }
+            else
+                union_set(a,b,fa,fb,c);
+        }
+        printf("%d\n", ans);
+    }
+    return 0;
+}
