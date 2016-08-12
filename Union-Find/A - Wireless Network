@@ -1,0 +1,81 @@
+#include<iostream>
+#include<cstdio>
+#include<algorithm>
+#include<cmath>
+#include<cstring>
+#include<queue>
+#include<cstdlib>
+#include<stack>
+#include<climits>
+#include<vector>
+#include<string>
+#include<map>
+using namespace std;
+const int maxn = 1010;
+struct node{
+    int x, y;
+    node(){}
+    node(int _x, int _y):x(_x),y(_y){}
+};
+node p[maxn];
+bool use[maxn];
+int pre[maxn], rank[maxn];
+int dis(node a, node b){
+    return (a.x-b.x)*(a.x-b.x)+(a.y-b.y)*(a.y-b.y);
+}
+
+void make_set(int n){
+    for(int i=1; i<=n; i++){
+        pre[i]=i;
+        rank[i]=i;
+    }
+}
+
+int find_set(int x){
+    if(x!=pre[x])
+        pre[x]=find_set(pre[x]);
+    return pre[x];
+}
+
+void union_set(int x, int y){
+    x=find_set(x);
+    y=find_set(y);
+    if(x==y) return ;
+    if(rank[x]>=rank[y]){
+        pre[y]=x;
+        rank[x]+=rank[y];
+    }
+    else{
+        pre[x]=y;
+        rank[y]+=rank[x];
+    }
+}
+
+int main(){
+    int n, d, x, y;
+    char ch[5];
+    scanf("%d%d", &n, &d);
+    for(int i=1; i<=n; i++){
+        scanf("%d%d", &p[i].x, &p[i].y);
+        use[i]=false;
+    }
+    int cnt=0;
+    make_set(n);
+    while(~scanf("%s", ch)){
+        if(ch[0]=='O'){
+            scanf("%d", &x);
+            use[x]=true;
+            for(int i=1; i<=n; i++)
+                if(use[i] && i!=x && dis(p[i], p[x])<=d*d)
+                    union_set(i, x);
+        }
+        else{
+            scanf("%d%d", &x, &y);
+            x=find_set(x);
+            y=find_set(y);
+            if(x==y) puts("SUCCESS");
+            else puts("FAIL");
+        }
+    }
+    return 0;
+}
