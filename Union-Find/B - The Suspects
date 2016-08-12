@@ -1,0 +1,46 @@
+#include<iostream>
+#include<cstdio>
+#include<algorithm>
+#include<cmath>
+#include<cstring>
+#include<queue>
+#include<cstdlib>
+#include<stack>
+#include<climits>
+#include<vector>
+#include<string>
+#include<map>
+using namespace std;
+const int maxn = 30010;
+int pre[maxn], rank[maxn];
+int find_set(int x){
+    return x==pre[x]?pre[x]:find_set(pre[x]);
+}
+void union_set(int x, int y){
+    x=find_set(x);
+    y=find_set(y);
+    if(x!=y){
+        pre[y]=x;
+        rank[x]+=rank[y];
+    }
+}
+int main(){
+    int n, m, num;
+    while(~scanf("%d%d", &n, &m)&&n+m){
+        for(int i=0; i<n; i++){
+            pre[i]=i;
+            rank[i]=1;
+        }
+        for(int i=1; i<=m; i++){
+            scanf("%d",&num);
+            int *stu=new int[num];
+            for(int j=0; j<num; j++){
+                scanf("%d", &stu[j]);
+                if(j!=0) union_set(stu[j-1], stu[j]);
+            }
+            delete(stu);
+        }
+        printf("%d\n", rank[find_set(0)]);  //is not rank[find_set(pre[0])]
+    }
+    return 0;
+}
