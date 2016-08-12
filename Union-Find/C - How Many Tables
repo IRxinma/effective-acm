@@ -1,0 +1,65 @@
+#include<iostream>
+#include<cstdio>
+#include<algorithm>
+#include<cmath>
+#include<cstring>
+#include<queue>
+#include<cstdlib>
+#include<stack>
+#include<climits>
+#include<vector>
+#include<string>
+#include<map>
+using namespace std;
+const int maxn = 1010;
+int pre[maxn], high[maxn];
+bool vis[maxn];
+int n, m;
+void make_set(){
+    for(int i=1; i<=n; i++){
+        pre[i]=i;
+        high[i]=0;
+    }
+}
+
+int find_set(int x){
+    return x==pre[x]?pre[x]:find_set(pre[x]);
+}
+
+void union_set(int x, int y){
+    x=find_set(x);
+    y=find_set(y);
+    if(high[x]>high[y])
+        pre[y]=x;
+    else{
+        pre[x]=y;
+        if(high[x]==high[y])
+            high[y]++;
+    }
+}
+
+int main(){
+    int t;
+    scanf("%d", &t);
+    while(t --){
+        scanf("%d%d", &n, &m);
+        make_set();
+        for(int i=1; i<=m; i++){
+            int x, y;
+            scanf("%d%d", &x, &y);
+            union_set(x, y);
+        }
+        int ans=0;
+        memset(vis, false, sizeof(vis));
+        for(int i=1; i<=n; i++){
+            if(vis[find_set(i)]) continue;
+            vis[find_set(i)]=true;
+            ans ++;
+        }
+
+        //for(int i=1; i<=n; i++) printf("%d\n", pre[i]);
+
+        printf("%d\n", ans);
+    }
+    return 0;
+}
