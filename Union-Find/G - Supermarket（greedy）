@@ -1,0 +1,53 @@
+#include<iostream>
+#include<cstdio>
+#include<algorithm>
+#include<cmath>
+#include<cstring>
+#include<queue>
+#include<cstdlib>
+#include<stack>
+#include<climits>
+#include<vector>
+#include<string>
+#include<map>
+using namespace std;
+const int maxn = 1e4 + 10;
+struct node{
+    int profit, deadline;
+    node(int _profit=0,int _deadline=0):profit(_profit),deadline(_deadline){}
+    friend bool operator < (const node &a, const node &b){
+        if(a.profit==b.profit) return a.deadline>b.deadline;
+        return a.profit<b.profit;
+    }
+};
+bool vis[maxn];
+int main(){
+    int n, p, d;
+    while(~scanf("%d", &n)){
+        priority_queue<node> q;
+        for(int i=1; i<=n; i++){
+            scanf("%d%d", &p, &d);
+            q.push(node(p,d));
+        }
+        memset(vis, false, sizeof(vis));
+        int ans=0;
+        while(!q.empty()){
+            node t=q.top(); q.pop();
+            if(!vis[t.deadline]){
+                vis[t.deadline]=true;
+                ans+=t.profit;
+            }
+            else{
+                for(int i=t.deadline-1; i>=1; i--){
+                    if(!vis[i]){
+                        vis[i]=true;
+                        ans+=t.profit;
+                        break;
+                    }
+                }
+            }
+        }
+        printf("%d\n", ans);
+    }
+    return 0;
+}
