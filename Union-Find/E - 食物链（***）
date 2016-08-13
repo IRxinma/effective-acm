@@ -1,0 +1,65 @@
+#include<iostream>
+#include<cstdio>
+#include<algorithm>
+#include<cmath>
+#include<cstring>
+#include<queue>
+#include<cstdlib>
+#include<stack>
+#include<climits>
+#include<vector>
+#include<string>
+#include<map>
+using namespace std;
+/*
+the general idea:
+1.if two species are linked, whether eating, been eaten or similar,there should be a pathway accessible between them.
+2.if relationship about a and b, b and c have a relationship,then the relationship btween a and c can be pushed.(use vector)
+every time input d, x, y, that is equivalent of the right to have a pathway d between x and y. So the different foods lap
+configuration a connected region which has a root node. Conveniencely, the relation array maintains this weight. Relation[i]
+performance connectivity in the region of root points to relations section of i.
+fx=find_set(x), fy=find_set(y);
+case1: fx==fy
+    (use vector can be deduced):(relation[y]-relation[x]+3)%3==d-1;
+case2: fx!=fy
+    (use vector can be deduced): pre[fy]=fx;
+                                relation[fy]=(relation[x]-relation[y]+3+d-1)%3;
+node: no while loop input(fk)
+*/
+const int maxn = 5e4 + 10;
+int pre[maxn], re[maxn], n, m, ans;
+void init(){
+    for(int i=1; i<=n; i++)
+        pre[i]=i, re[i]=0;
+}
+int find_set(int x){
+    if(x==pre[x]) return x;
+    int tmp=find_set(pre[x]);
+    re[x]=(re[x]+re[pre[x]])%3;
+    pre[x]=tmp;
+    return tmp;
+}
+bool union_set(int d, int x, int y){
+    int fx=find_set(x);
+    int fy=find_set(y);
+    if(fx==fy){
+        if((re[y]-re[x]+3)%3!=d-1) ans++;
+    }
+    else{
+        pre[fy]=fx;
+        re[fy]=(re[x]-re[y]+3+d-1)%3;
+    }
+}
+int main(){
+    int a, b, d;
+    scanf("%d%d", &n ,&m);
+    init();
+    ans=0;
+    for(int i=1; i<=m; i++){
+        scanf("%d%d%d", &d, &a, &b);
+        if(a>n || b>n || (a==b&&d==2)) ans++;
+        else union_set(d, a, b);
+    }
+    printf("%d\n", ans);
+    return 0;
+}
