@@ -1,0 +1,47 @@
+#include<iostream>
+#include<cstdio>
+#include<algorithm>
+#include<cmath>
+#include<cstring>
+#include<queue>
+#include<cstdlib>
+#include<stack>
+#include<climits>
+#include<vector>
+#include<string>
+#include<map>
+using namespace std;
+const int maxn = 1e4 + 10;
+struct node{
+    int profit, deadline;
+    node(int _profit=0, int _deadline=0):profit(_profit),deadline(_deadline){}
+};
+node s[maxn];
+int pre[maxn], n;
+
+int find(int x){
+    return x==pre[x]?x:pre[x]=find(pre[x]);
+}
+
+bool cmp(const node &a, const node &b){
+    return a.profit>b.profit;
+}
+
+int main(){
+    while(~scanf("%d", &n)){
+        for(int i=0; i<n; i++)
+            scanf("%d%d",&s[i].profit, &s[i].deadline);
+        sort(s,s+n,cmp);
+        for(int i=1; i<maxn; i++) pre[i]=i;
+        int ans = 0;
+        for(int i=0; i<n; i++){
+            int fd=find(s[i].deadline);
+            if(fd>0){
+                ans+=s[i].profit;
+                pre[fd]=fd-1;
+            }
+        }
+        printf("%d\n", ans);
+    }
+    return 0;
+}
