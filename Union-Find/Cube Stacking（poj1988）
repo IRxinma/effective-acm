@@ -1,0 +1,51 @@
+#include <map>
+#include <set>
+#include <queue>
+#include <stack>
+#include <vector>
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+const int maxn = 3e4 + 10;
+int pre[maxn], r[maxn], under[maxn];
+int find_set(int x){
+    if(x==pre[x]) return x;
+    int tmp=find_set(pre[x]);
+    under[x]+=under[pre[x]];
+    return pre[x]=tmp;
+}
+void union_set(int x,int y){
+    x=find_set(x);
+    y=find_set(y);
+    if(x!=y){
+        pre[x]=y;
+        under[x]=r[y];
+        r[y]+=r[x];
+    }
+}
+int main(){
+    int n, a, b;
+    char ch[10];
+    while(~scanf("%d", &n)){
+        for(int i=0; i<maxn; i++){
+            pre[i]=i; r[i]=1; under[i]=0;
+        }
+        for(int i=1; i<=n; i++){
+            scanf("%s", ch);
+            if(ch[0]=='M'){
+                scanf("%d%d", &a, &b);
+                union_set(a,b);
+            }
+            else{
+                scanf("%d", &a);
+                find_set(a);
+                printf("%d\n", under[a]);
+            }
+        }
+    }
+    return 0;
+}
