@@ -1,0 +1,36 @@
+#include<iostream>
+#include<cstdio>
+#include<algorithm>
+#include<cmath>
+#include<cstring>
+#include<queue>
+#include<cstdlib>
+#include<stack>
+#include<climits>
+#include<vector>
+#include<string>
+#include<map>
+using namespace std;
+/*
+为了更好地计数：应该在i，j位置处分别记录i-1,j-1的最长公共子串个数。
+*/
+const int maxn = 2010;
+char a[maxn], b[maxn];
+int dp[maxn][maxn];
+
+int main(){
+    while(~scanf("%s%s", a, b)){
+        int len1=strlen(a);
+        int len2=strlen(b);
+        for(int i=0; i<=len1; i++) dp[i][0]=0;
+        for(int j=0; j<=len2; j++) dp[0][j]=0;
+        for(int i=1; i<=len1; i++){
+            for(int j=1; j<=len2; j++){
+                if(a[i-1]==b[j-1]) dp[i][j]=dp[i-1][j-1]+1;
+                else dp[i][j]=max(dp[i-1][j], dp[i][j-1]);
+            }
+        }
+        printf("%d\n", dp[len1][len2]);
+    }
+    return 0;
+}
