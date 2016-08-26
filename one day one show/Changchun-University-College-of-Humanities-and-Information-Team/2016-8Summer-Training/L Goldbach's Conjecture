@@ -1,0 +1,57 @@
+#include<iostream>
+#include<cstdio>
+#include<algorithm>
+#include<cmath>
+#include<cstring>
+#include<queue>
+#include<cstdlib>
+#include<stack>
+#include<climits>
+#include<vector>
+#include<string>
+#include<map>
+using namespace std;
+const int maxn = 1e6 + 10;
+int n, num;
+int prime[maxn/10];
+bool vis[maxn];
+void init_prime(){
+    memset(vis, true, sizeof(vis));
+    num=0;
+    vis[0]=vis[1]=false;
+    for(int i=2; i<=maxn; i++){
+        if(vis[i]) prime[++num]=i;
+        for(int j=1; (j<=num)&&(i*prime[j]<=maxn); j++){
+            vis[i*prime[j]]=false;
+            if(i%prime[j]==0) break;
+        }
+    }
+}
+int main(){
+    init_prime();
+    //for(int i=1; i<=5; i++) cout<<prime[i]<<endl;
+    while(~scanf("%d", &n)&&n){
+        bool flag=false;
+        int l=lower_bound(prime+1, prime+num+1, n)-prime;
+        for(int i=l-1; i>=2&&!flag; i--){
+            int tmp=lower_bound(prime+1, prime+num+1, n-prime[i])-prime;
+            //cout<<prime[i]<<"..."<<prime[tmp-1]<<"..."<<prime[tmp]<<endl;
+            if(prime[i]+prime[tmp-1]==n){
+                flag=true;
+                if(i<=tmp-1)
+                    printf("%d = %d + %d\n", n, prime[i], prime[tmp-1]);
+                else
+                    printf("%d = %d + %d\n", n, prime[tmp-1], prime[i]);
+            }
+            if(prime[i]+prime[tmp]==n){
+                flag=true;
+                if(i<=tmp)
+                    printf("%d = %d + %d\n", n, prime[i],prime[tmp]);
+                else
+                    printf("%d = %d + %d\n", n, prime[tmp], prime[i]);
+            }
+        }
+        if(!flag) printf("Goldbach's conjecture is wrong.\n");
+    }
+    return 0;
+}
