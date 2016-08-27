@@ -1,0 +1,58 @@
+#include<cstdio>
+#include<iostream>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+using namespace std;
+typedef long long ll;
+const ll mod = 9901;
+const int maxn = 10100;
+ll a[maxn], n[maxn];
+ll A, B;
+
+ll quickmod(ll a, ll b, ll m){
+	ll res=1;
+	while(b){
+		if(b&1) res=res*a%m;
+		b>>=1;
+		a=a*a%m;
+	}
+	return res;
+}
+
+ll sum(ll p, ll n){
+	if(n==0) return 1;
+	if(n%2)
+		return sum(p,n/2)*(1+quickmod(p,n/2+1,mod))%mod;
+	else
+		return (sum(p,n/2-1)*(1+quickmod(p,n/2+1,mod))+quickmod(p,n/2,mod))%mod;
+}
+
+int main(){
+	while(cin>>A>>B){
+		int i, k=0;
+		for(i=2; i*i<=A;){
+			if(A%i==0){
+				a[k]=i;
+				n[k]=0;
+				while(!(A%i)){
+					n[k]++;
+					A/=i;
+				}
+				k++;
+			}
+			if(i==2) i++;
+			else i+=2;
+		}
+		if(A!=1){
+			a[k]=A;
+			n[k++]=1;
+		}
+		ll ans=1;
+		for(i=0; i<k; i++)
+			ans=(ans*sum(a[i],n[i]*B)%mod)%mod;
+		//printf("%I64d\n", ans);
+		cout<<ans<<endl;
+	}
+	return 0;
+}
