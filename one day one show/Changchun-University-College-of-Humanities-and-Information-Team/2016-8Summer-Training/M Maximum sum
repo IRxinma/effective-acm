@@ -1,0 +1,31 @@
+#include<cstdio>
+#include<iostream>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<cstdlib>
+using namespace std;
+typedef long long ll;
+const int maxn = 50010;
+const int inf = 1<<29;
+int a[maxn];//存入数
+int l[maxn];//以第i个元素为终点一段区间的前缀和最大值
+int r[maxn];//以第i个元素为起始点一段区间的前缀和最大值
+int rm[maxn];//以第i个元素为起始点的一段区间的后缀和最大值
+int t, n;
+int main(){
+	scanf("%d", &t);
+	while(t --){
+		scanf("%d", &n);
+		for(int i=1; i<=n; i++) scanf("%d", &a[i]);
+		l[1]=a[1]; r[n]=a[n];rm[n]=a[n];
+		for(int i=2; i<=n; i++) l[i]=max(l[i-1]+a[i],a[i]);
+		for(int i=n-1; i>=1; i--) r[i]=max(r[i+1]+a[i], a[i]);
+		for(int i=n-1; i>=1; i--) rm[i]=max(rm[i+1], r[i]);
+		int res=-inf;
+		for(int i=2; i<=n; i++)
+			res=max(res, l[i-1]+rm[i]);
+		printf("%d\n", res);
+	}
+	return 0;
+}
