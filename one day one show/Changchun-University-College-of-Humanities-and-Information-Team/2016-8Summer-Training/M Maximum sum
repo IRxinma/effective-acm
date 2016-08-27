@@ -9,9 +9,9 @@ typedef long long ll;
 const int maxn = 50010;
 const int inf = 1<<29;
 int a[maxn];//存入数
-int l[maxn];//以第i个元素为终点一段区间的前缀和最大值
-int r[maxn];//以第i个元素为起始点一段区间的前缀和最大值
-int rm[maxn];//以第i个元素为起始点的一段区间的后缀和最大值
+int l[maxn];//以第i个元素为终点一段区间的最大值
+int r[maxn];//以第i个元素为起始点一段区间的最大值
+int rm[maxn];//后i个元素之中最大连续子串的和
 int t, n;
 int main(){
 	scanf("%d", &t);
