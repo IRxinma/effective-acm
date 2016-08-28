@@ -1,0 +1,76 @@
+#include<cstdio>
+#include<iostream>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<cstdlib>
+using namespace std;
+/*
+4 5
+800 3 2
+2 1
+3 2
+20 1 1
+4 1
+30 5 1
+4 2
+100 4 1
+5 0
+5 7 0
+*/
+const int inf = 1<<29;
+const int maxn = 110;
+int dist[maxn], w[maxn][maxn], value[maxn], level[maxn];
+bool vis[maxn], can_change[maxn];
+int m, n;
+
+int Dijkstra(){
+	int mini_cost=inf;
+	memset(vis, false, sizeof(vis));
+	for(int i=1; i<=n; i++) dist[i]=inf;
+	dist[1]=0;
+	for(int i=1; i<=n; i++){
+		int k, mini=inf;
+		for(int j=1; j<=n; j++)
+			if(!vis[j] && dist[j]<=mini && can_change[j])
+				mini=dist[k=j];
+		vis[k]=true;
+		for(int j=1; j<=n; j++)
+			if(can_change[j])
+				dist[j]=min(dist[j], dist[k]+w[k][j]);
+	}
+	for(int i=1; i<=n; i++){
+		dist[i]+=value[i];
+		mini_cost=min(mini_cost, dist[i]);
+	}
+	return mini_cost;
+}
+
+int main(){
+	scanf("%d%d", &m, &n);
+	for(int i=1; i<=n; i++){
+		for(int j=1; j<=n; j++){
+			if(i==j) w[i][j]=0;
+			else w[i][j]=inf;
+		}
+	}
+	for(int i=1; i<=n; i++){
+		int change;
+		scanf("%d%d%d", &value[i], &level[i], &change);
+		for(int j=1; j<=change; j++){
+			int y, Value;
+			scanf("%d%d",&y, &Value);
+			w[i][y]=Value;
+		}
+	}
+	int king_level=level[1], minicost=inf;
+	for(int i=0; i<=m; i++){
+		memset(can_change, false, sizeof(can_change));
+		for(int j=1; j<=n; j++)
+			if(level[j]>=king_level-m+i && level[j]<=king_level+i)
+				can_change[j]=true;
+		minicost=min(minicost, Dijkstra());
+	}
+	printf("%d\n", minicost);
+	return 0;
+}
