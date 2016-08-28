@@ -1,0 +1,40 @@
+#include<cstdio>
+#include<iostream>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<cstdlib>
+using namespace std;
+int N, M, ans;
+
+void dfs(int leftv, int cnt, int v, int lastr, int lasth){
+	if(cnt*((lastr-1)*(lastr-1))*(lasth-1)<leftv && cnt!=M) return ;
+	if(leftv<0) return ;
+	if(ans && v>ans) return ;
+	if(!cnt){
+		if(!leftv && (v<ans || !ans))
+			ans=v;
+		return ;
+	}
+	for(int r=lastr-1; r>=cnt; r--){
+		for(int h=lasth-1; h>=cnt; h--){
+			int curv=r*r*h;
+			int curs=2*r*h;
+			if(cnt==M) curs+=r*r;
+			//木有想到，很关键的一步，70ms->12ms
+			if(v+2*leftv/r>ans && ans) continue;
+		  //脑子笨～
+			dfs(leftv-curv, cnt-1, v+curs, r, h);
+		}
+	}
+}
+
+int main(){
+	while(~scanf("%d", &N)){
+		scanf("%d", &M);
+		ans=0;
+		dfs(N, M, 0, 100, 1000);
+		printf("%d\n", ans);
+	}
+	return 0;
+}
