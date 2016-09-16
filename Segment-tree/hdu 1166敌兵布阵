@@ -1,0 +1,63 @@
+#include<cstring>
+#include<cstdio>
+#include<iostream>
+using namespace std;
+const int maxn = 50005;
+#define root 1, n, 1
+#define lson l, m, rt<<1
+#define rson m+1, r, rt<<1|1
+int sum[maxn<<2];
+inline void PushPlus(int rt){
+	sum[rt]=sum[rt<<1]+sum[rt<<1|1];
+}
+
+void build(int l, int r, int rt){
+	if(l==r){
+		scanf("%d", &sum[rt]);
+		return ;
+    }
+	int m=(l+r)>>1;
+	build(lson);
+	build(rson);
+	PushPlus(rt);
+}
+
+void Update(int p, int add, int l, int r, int rt){
+	if(l==r){
+		sum[rt]+=add;
+		return ;
+	}
+	int m=(l+r)>>1;
+	if(p<=m) Update(p, add, lson);
+	else Update(p, add, rson);
+	PushPlus(rt);
+}
+
+int Query(int L, int R, int l, int r, int rt){
+	if(L<=l && r<=R){
+		return sum[rt];
+	}
+	int m=(l+r)>>1;
+	int ans=0;
+	if(L<=m) ans+=Query(L,R,lson);
+	if(R>m) ans+=Query(L,R,rson);
+	return ans;
+}
+
+int main(){
+	int T, n, a, b;
+	scanf("%d", &T);
+	for(int i=1; i<=T; i++){
+		printf("Case %d:\n", i);
+		scanf("%d", &n);
+		build(1,n,1);
+		char op[10];
+		while(~scanf("%s", op)&& op[0]!='E'){
+			scanf("%d %d", &a, &b);
+			if(op[0]=='Q') printf("%d\n", Query(a, b, root));
+			else if(op[0]=='S') Update(a, -b, root);
+			else Update(a, b, root);
+		}
+	}
+	return 0;
+}
