@@ -1,0 +1,54 @@
+  #include<cstring>
+#include<cstdio>
+#include<iostream>
+using namespace std;
+const int maxn = 2e5+5;
+#define root 1, n, 1
+#define lson l, m, rt<<1
+#define rson m+1, r, rt<<1|1
+int maxx[maxn<<2];
+void pushup(int rt){
+    maxx[rt]=max(maxx[rt<<1], maxx[rt<<1|1]);
+}
+void build(int l, int r, int rt){
+    if(l==r){
+        scanf("%d", &maxx[rt]);
+        return ;
+    }
+    int m=(l+r)>>1;
+    build(lson);
+    build(rson);
+    pushup(rt);
+}
+void update(int p, int sc, int l, int r, int rt){
+    if(l==r){
+        maxx[rt]=sc;
+        return ;
+    }
+    int m=(l+r)>>1;
+    if(p<=m) update(p, sc, lson);
+    else update(p, sc, rson);
+    pushup(rt);
+}
+int query(int L, int R, int l, int r, int rt){
+    if(L<=l&&r<=R) return maxx[rt];
+    int m=(l+r)>>1;
+    int ret=0;
+    if(L<=m) ret=max(ret, query(L, R, lson));
+    if(R>m) ret=max(ret, query(L, R, rson));
+    return ret;
+}
+int main(){
+    int n, m;
+    while(~scanf("%d%d", &n, &m)){
+        build(root);
+        while(m--){
+            char op[2];
+            int a, b;
+            scanf("%s%d%d", op, &a, &b);
+            if(op[0]=='Q') printf("%d\n", query(a, b, root));
+            else update(a, b, root);
+        }
+    }
+    return 0;
+}
