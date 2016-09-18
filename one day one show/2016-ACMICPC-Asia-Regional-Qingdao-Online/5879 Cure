@@ -1,0 +1,27 @@
+#include<cstdio>
+#include<iostream>
+#include<algorithm>
+#include<cstdlib>
+#include<set>
+#include<cmath>
+#include<cstring>
+#include<climits>
+using namespace std;
+const int maxn = 1000100;
+double ans[maxn];
+char s[50];
+int main(){
+    ans[0]=0;
+    for(int i=1; i<maxn; i++) ans[i]=ans[i-1]+1.0/((double)i*(double)i);
+    cout<<ans[200000]<<endl;
+    while(~scanf("%s", s)){
+        int len=strlen(s);
+        if(len>=7) printf("%.5f\n", ans[maxn-1]);
+        else{
+            int n=0;
+            for(int i=0; i<len; i++) n=n*10+s[i]-'0';
+            printf("%.5f\n", ans[n]);
+        }
+    }
+    return 0;
+}
