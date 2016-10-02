@@ -1,0 +1,23 @@
+#include<bits/stdc++.h>
+#include<iostream>
+#include<cstdio>
+using namespace std;
+const int maxn = 1010;
+int a[maxn];
+int main(){
+    int n;
+    while(~scanf("%d", &n) && n){
+        int ans=0, num=0;
+        for(int i=0; i<n; i++){
+            scanf("%d", &a[i]);
+            ans^=a[i];
+        }
+        for(int i=0; i<n; i++)
+            if(a[i]>(a[i]^ans)) num++;
+        printf("%d\n", num);
+    }
+    return 0;
+}
+/*
+nim先手勝的條件是每堆石子亦或和不爲0，而先手第一步應該將所有石子亦或和變爲0
+*/
