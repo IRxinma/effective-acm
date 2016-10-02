@@ -22,7 +22,7 @@ int main(){
                 for(int k=1; k<=i; k++) tmp1[a[k]]++;
                 while(tmp<=n-cnt && flag){
                     flag=true;
-                    memcpy(viss, vis, sizeof(int)*n);
+                    //memcpy(viss, vis, sizeof(int)*n);
                     tmp2=tmp1;
                     for(int j=tmp+1; j<=tmp+cnt && tmp+cnt<=n && flag; j++){
                         if(tmp2[a[j]]) tmp2[a[j]]--;
