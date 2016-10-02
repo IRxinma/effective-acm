@@ -1,0 +1,36 @@
+#include<bits/stdc++.h>
+using namespace std;
+const int maxn = 1e5 + 10;
+int a[maxn], biao[maxn], temp[maxn];
+int cnt, n;
+void dabiao(int k){
+    memcpy(temp, a, sizeof(int)*n);
+    sort(temp, temp+k);
+    for(int i=k; i<n; i+=k){
+        sort(temp+i, temp+i+k);
+        for(int j=0; j<k; j++){
+            if(temp[i+j] != temp[i+j-k]) return ;
+        }
+    }
+    biao[cnt++]=k;
+}
+
+int main(){
+    int t;
+    scanf("%d", &t);
+    while(t --){
+        cnt=0;
+        scanf("%d", &n);
+        for(int i=0; i<n; i++) scanf("%d", &a[i]);
+        for(int i=1; i<=n/2; i++){
+            if(n%i) continue;
+            dabiao(i);
+        }
+        biao[cnt++]=n;
+        //cout<<cnt<<endl;
+        printf("%d", biao[0]);
+        for(int i=1; i<cnt; i++) printf(" %d", biao[i]);
+        printf("\n");
+    }
+    return 0;
+}
